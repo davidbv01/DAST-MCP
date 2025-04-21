@@ -1,0 +1,3 @@
+[submodule "tools/wapiti"]
+	path = tools/wapiti
+	url = https://github.com/wapiti-scanner/wapiti.git
