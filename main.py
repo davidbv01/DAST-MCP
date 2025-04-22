@@ -1,5 +1,3 @@
-from fastapi import FastAPI
-from fastapi_mcp import FastApiMCP
 from pydantic import BaseModel
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,7 +5,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from typing import List
 from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator
 from bs4 import BeautifulSoup
+from mcp.server.fastmcp import FastMCP
 
 driver = None
 
@@ -21,24 +21,29 @@ class InputRequest(BaseModel):
 class ClickRequest(BaseModel):
     selector: str
 
+# Create a named server
+mcp = FastMCP("input_mcp")
+
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
+async def app_lifespan(server: FastMCP):
     global driver
+    # Startup
     options = Options()
     options.headless = False  # VISUAL MODE
     driver = webdriver.Chrome(options=options)
-    yield
-    # Shutdowns
-    if driver:
-        driver.quit()
+    try:
+        yield
+    finally:
+        # Shutdowns
+        if driver:
+            driver.quit()
 
-app = FastAPI(lifespan=lifespan)
-@app.post("/navigate", operation_id="navigate")
+# Pass lifespan to server
+mcp = FastMCP("input_mcp", lifespan=app_lifespan)
+
+@mcp.tool()
 def navigate(request: NavigateRequest):
-    """
-    Navigate to a URL and extract elements like links, inputs, buttons, and forms from the page.
-    """
+    "Navigate to a URL and extract elements like links, inputs, buttons, and forms from the page."
     try:
         driver.get(request.url)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -84,11 +89,9 @@ def navigate(request: NavigateRequest):
         return {"success": False, "error": str(e)}
 
 
-@app.post("/input", operation_id="input_text")
+@mcp.tool()
 def input_text(request: InputRequest):
-    """
-    Input text into an input field specified by the selector.
-    """
+    "Input text into an input field specified by the selector."
     try:
         element = driver.find_element(By.CSS_SELECTOR, request.selector)
         element.clear()
@@ -98,11 +101,9 @@ def input_text(request: InputRequest):
         return {"success": False, "error": str(e)}
 
 
-@app.post("/click", operation_id="click_element")
+@mcp.tool()
 def click_element(request: ClickRequest):
-    """
-    Click an element specified by the selector.
-    """
+    "Click an element specified by the selector."
     try:
         element = driver.find_element(By.CSS_SELECTOR, request.selector)
         element.click()
@@ -111,21 +112,14 @@ def click_element(request: ClickRequest):
         return {"success": False, "error": str(e)}
 
 
-@app.get("/cookies", operation_id="get_cookies")
+@mcp.tool()
 def get_cookies():
-    """
-    Retrieve the cookies stored by the WebDriver.
-    """
+    "Retrieve the cookies stored by the WebDriver."
     try:
         cookies = driver.get_cookies()
         return {"success": True, "cookies": cookies}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-mcp = FastApiMCP(app)
-mcp.mount()
-
-
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    mcp.run()
