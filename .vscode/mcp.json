@@ -1,10 +1,8 @@
 {
-    "servers": {
-      "input_mcp": {
-        "type": "stdio",
-        "command": "C:\\Users\\david\\DAST-MCP\\.venv\\Scripts\\python.exe",
-        "args": ["C:\\Users\\david\\DAST-MCP\\main.py"]
-      }
+  "servers": {
+    "mcp_server_latitude": {
+      "type": "sse",
+      "url": "http://localhost:8000/mcp"
     }
   }
-  
+}
