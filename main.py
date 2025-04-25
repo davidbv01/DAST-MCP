@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
 from fastapi_mcp import FastApiMCP
+from zapv2 import ZAPv2
 
 driver = None
 
@@ -113,14 +114,22 @@ async def input_text(request: InputRequest):
         element.send_keys(request.content)
         # If it's a password field, send the ENTER key
         if request.is_password:
+            cookies_before = driver.get_cookies()
             element.send_keys(Keys.RETURN)
             # wait for the page to load
             driver.implicitly_wait(5)
             #Obtain the new page source
+            cookies_after = driver.get_cookies()
+            # Check if the cookies have changed
+            if cookies_before != cookies_after:
+                # Extract elements
+                summary = get_html(BeautifulSoup(driver.page_source, 'html.parser'))
+                # Return the new page source
+                return {"success": True, "isLogged":True, "elements": summary, "cookies": cookies_after}
             summary = get_html(BeautifulSoup(driver.page_source, 'html.parser'))
             # Return the new page source
-            return {"success": True, "elements": summary}
-        return {"success": True}
+            return {"success": True, "isLogged":False}
+        return {"success": True, "isLogged":False}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -143,9 +152,12 @@ async def get_cookies():
         cookies = driver.get_cookies()
         return {"success": True, "cookies": cookies}
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        return {"success": False, "error": str(e)}    
 
-mcp = FastApiMCP(app)
+mcp = FastApiMCP(app,
+                description="MCP Server for web scraping for cibersecurity",
+                describe_all_responses=True,
+                describe_full_response_schema=True)
 
 # Mount the MCP server directly to your FastAPI app
 mcp.mount()
