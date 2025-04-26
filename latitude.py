@@ -45,8 +45,8 @@ async def main():
         # Enable streaming
         stream=True,
         # Provide callbacks for events
-        on_finished=lambda result: print('\nRUN COMPLETED:', result.uuid),
-        on_error=lambda error: print('\nERROR:', error.message),
+        on_finished=on_finished,
+        on_error=on_error,
         on_event=on_event
     ))
     return result
