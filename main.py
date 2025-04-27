@@ -8,15 +8,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from contextlib import asynccontextmanager
 from bs4 import BeautifulSoup
 from fastapi.responses import RedirectResponse
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi_mcp import FastApiMCP
 from urllib.parse import urljoin
 from zapv2 import ZAPv2
 import asyncio
+import logging
 
 apiKey = 'e2q0nlun84j194hscevlrem7d0'
 driver = None
 driver_lock = asyncio.Lock()
+logging.basicConfig(level=logging.INFO)
 
 # Configurar ZAP como proxy
 zap_proxy = 'localhost:8080'  # ZAP proxy por defecto
@@ -229,28 +231,36 @@ async def click_element(request: ClickRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.post("/execute_scan",
+@app.post("/execute_scan", 
           operation_id="execute_scan")
 async def execute_scan(request: NavigateRequest):
-    "Execute a scan using ZAP API."
+    "Execute a spider scan, then ajax scan, then active scan using ZAP API."
     try:
-        scan_id = zap.ajaxSpider.scan(request.url)
-        return {
-            "success": True
-        }
+        asyncio.create_task(run_zap_full_scan(request.url))
+        return {"success": True, "message": "Scan started in background"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/get_cookies",
-          operation_id="get_cookies")
-async def get_cookies():
-    "Retrieve the cookies stored by the WebDriver."
-    try:
-        async with driver_lock:
-            cookies = driver.get_cookies()
-        return {"success": True, "cookies": cookies}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+async def run_zap_full_scan(target_url):
+    logging.info("[*] Starting traditional Spider...")
+    spider_id = zap.spider.scan(target_url)
+    while int(zap.spider.status(spider_id)) < 100:
+        await asyncio.sleep(2)
+    logging.info("[*] Spider completed!")
+
+    logging.info("[*] Starting AJAX Spider...")
+    zap.ajaxSpider.scan(target_url)
+    while zap.ajaxSpider.status == 'running':
+        await asyncio.sleep(2)
+    logging.info("[*] AJAX Spider completed!")
+
+    logging.info("[*] Starting Active Scan...")
+    active_scan_id = zap.ascan.scan(target_url)
+    while int(zap.ascan.status(active_scan_id)) < 100:
+        await asyncio.sleep(5)
+    logging.info("[*] Active Scan completed!")
+
+    logging.info("[*] Full scan completed successfully!")
 
 mcp = FastApiMCP(app,
                 description="MCP Server for web scraping for cibersecurity",

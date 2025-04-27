@@ -1,0 +1,1209 @@
+<?xml version="1.0"?>
+<OWASPZAPReport programName="ZAP" version="2.16.1" generated="dom, 27 abr 2025 20:39:54">
+	
+		<site name="https://cdnjs.cloudflare.com" host="cdnjs.cloudflare.com" port="443" ssl="true">
+			<alerts>
+				
+					<alertitem>
+						<pluginid>10098</pluginid>
+						<alertRef>10098</alertRef>
+						<alert>Cross-Domain Misconfiguration</alert>
+						<name>Cross-Domain Misconfiguration</name>
+						<riskcode>2</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Medium (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;Web browser data loading may be possible, due to a Cross Origin Resource Sharing (CORS) misconfiguration on the web server.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>3</count>
+						<solution>&lt;p&gt;Ensure that sensitive data is not available in an unauthenticated manner (using IP address white-listing, for instance).&lt;/p&gt;&lt;p&gt;Configure the &quot;Access-Control-Allow-Origin&quot; HTTP header to a more restrictive set of domains, or remove all CORS headers entirely, to allow the web browser to enforce the Same Origin Policy (SOP) in a more restrictive manner.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://vulncat.fortify.com/en/detail?id=desc.config.dotnet.html5_overly_permissive_cors_policy&lt;/p&gt;</reference>
+						<cweid>264</cweid>
+						<wascid>14</wascid>
+						<sourceid>9</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10003</pluginid>
+						<alertRef>10003</alertRef>
+						<alert>Vulnerable JS Library</alert>
+						<name>Vulnerable JS Library</name>
+						<riskcode>2</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Medium (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;The identified library appears to be vulnerable.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>/2.2.4/jquery.min.js</evidence>
+									<otherinfo>The identified library jquery, version 2.2.4 is vulnerable.
+CVE-2020-11023
+CVE-2020-11022
+CVE-2015-9251
+CVE-2019-11358
+https://github.com/jquery/jquery/issues/2432
+http://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/
+http://research.insecurelabs.org/jquery/test/
+https://blog.jquery.com/2019/04/10/jquery-3-4-0-released/
+https://nvd.nist.gov/vuln/detail/CVE-2019-11358
+https://github.com/advisories/GHSA-rmxg-73gg-4p98
+https://nvd.nist.gov/vuln/detail/CVE-2015-9251
+https://github.com/jquery/jquery/commit/753d591aea698e57d6db58c9f722cd0808619b1b
+https://github.com/jquery/jquery.com/issues/162
+https://bugs.jquery.com/ticket/11974
+https://blog.jquery.com/2020/04/10/jquery-3-5-0-released/
+</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>1</count>
+						<solution>&lt;p&gt;Upgrade to the latest version of the affected library.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;The identified library jquery, version 2.2.4 is vulnerable.&lt;/p&gt;&lt;p&gt;CVE-2020-11023&lt;/p&gt;&lt;p&gt;CVE-2020-11022&lt;/p&gt;&lt;p&gt;CVE-2015-9251&lt;/p&gt;&lt;p&gt;CVE-2019-11358&lt;/p&gt;&lt;p&gt;https://github.com/jquery/jquery/issues/2432&lt;/p&gt;&lt;p&gt;http://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/&lt;/p&gt;&lt;p&gt;http://research.insecurelabs.org/jquery/test/&lt;/p&gt;&lt;p&gt;https://blog.jquery.com/2019/04/10/jquery-3-4-0-released/&lt;/p&gt;&lt;p&gt;https://nvd.nist.gov/vuln/detail/CVE-2019-11358&lt;/p&gt;&lt;p&gt;https://github.com/advisories/GHSA-rmxg-73gg-4p98&lt;/p&gt;&lt;p&gt;https://nvd.nist.gov/vuln/detail/CVE-2015-9251&lt;/p&gt;&lt;p&gt;https://github.com/jquery/jquery/commit/753d591aea698e57d6db58c9f722cd0808619b1b&lt;/p&gt;&lt;p&gt;https://github.com/jquery/jquery.com/issues/162&lt;/p&gt;&lt;p&gt;https://bugs.jquery.com/ticket/11974&lt;/p&gt;&lt;p&gt;https://blog.jquery.com/2020/04/10/jquery-3-5-0-released/&lt;/p&gt;&lt;p&gt;&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/&lt;/p&gt;</reference>
+						<cweid>1395</cweid>
+						<wascid>-1</wascid>
+						<sourceid>16</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10027</pluginid>
+						<alertRef>10027</alertRef>
+						<alert>Information Disclosure - Suspicious Comments</alert>
+						<name>Information Disclosure - Suspicious Comments</name>
+						<riskcode>0</riskcode>
+						<confidence>1</confidence>
+						<riskdesc>Informational (Low)</riskdesc>
+						<confidencedesc>Low</confidencedesc>
+						<desc>&lt;p&gt;The response appears to contain suspicious comments which may help an attacker.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Db</evidence>
+									<otherinfo>The following pattern was used: \bDB\b and was detected in likely comment: &quot;//,sb={},tb={},ub=&quot;*/&quot;.concat(&quot;*&quot;),vb=d.createElement(&quot;a&quot;);vb.href=jb.href;function wb(a){return function(b,c){&quot;string&quot;!=typeof &quot;, see evidence field for the suspicious comment/snippet.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>1</count>
+						<solution>&lt;p&gt;Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;The following pattern was used: \bDB\b and was detected in likely comment: &quot;//,sb={},tb={},ub=&quot;*/&quot;.concat(&quot;*&quot;),vb=d.createElement(&quot;a&quot;);vb.href=jb.href;function wb(a){return function(b,c){&quot;string&quot;!=typeof &quot;, see evidence field for the suspicious comment/snippet.&lt;/p&gt;</otherinfo>
+						<reference></reference>
+						<cweid>615</cweid>
+						<wascid>13</wascid>
+						<sourceid>16</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10050</pluginid>
+						<alertRef>10050-2</alertRef>
+						<alert>Retrieved from Cache</alert>
+						<name>Retrieved from Cache</name>
+						<riskcode>0</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Informational (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;The content was retrieved from a shared cache. If the response data is sensitive, personal or user-specific, this may result in sensitive information being leaked. In some cases, this may even result in a user gaining complete control of the session of another user, depending on the configuration of the caching components in use in their environment. This is primarily an issue where caching servers such as &quot;proxy&quot; caches are configured on the local network. This configuration is typically found in corporate or educational environments, for instance.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 395411</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 395412</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 395413</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 252624</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 252625</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 252626</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 259531</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 259532</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Age: 259533</evidence>
+									<otherinfo>The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>9</count>
+						<solution>&lt;p&gt;Validate that the response does not contain sensitive, personal or user-specific information. If it does, consider the use of the following HTTP response headers, to limit, or prevent the content being stored and retrieved from the cache by another user:&lt;/p&gt;&lt;p&gt;Cache-Control: no-cache, no-store, must-revalidate, private&lt;/p&gt;&lt;p&gt;Pragma: no-cache&lt;/p&gt;&lt;p&gt;Expires: 0&lt;/p&gt;&lt;p&gt;This configuration directs both HTTP 1.0 and HTTP 1.1 compliant caching servers to not store the response, and to not retrieve the response (without validation) from the cache, in response to a similar request.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;The presence of the &apos;Age&apos; header indicates that a HTTP/1.1 compliant caching server is in use.&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://tools.ietf.org/html/rfc7234&lt;/p&gt;&lt;p&gt;https://tools.ietf.org/html/rfc7231&lt;/p&gt;&lt;p&gt;https://www.rfc-editor.org/rfc/rfc9110.html&lt;/p&gt;</reference>
+						<cweid>-1</cweid>
+						<wascid>-1</wascid>
+						<sourceid>9</sourceid>
+					</alertitem>
+				
+			</alerts>
+		</site>
+	
+	
+		<site name="http://localhost:3000" host="localhost" port="3000" ssl="false">
+			<alerts>
+				
+					<alertitem>
+						<pluginid>10038</pluginid>
+						<alertRef>10038-1</alertRef>
+						<alert>Content Security Policy (CSP) Header Not Set</alert>
+						<name>Content Security Policy (CSP) Header Not Set</name>
+						<riskcode>2</riskcode>
+						<confidence>3</confidence>
+						<riskdesc>Medium (High)</riskdesc>
+						<confidencedesc>High</confidencedesc>
+						<desc>&lt;p&gt;Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page &#x2014; covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6tS&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>POST</method>
+									<param></param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ76e&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>POST</method>
+									<param></param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+						</instances>
+						<count>3</count>
+						<solution>&lt;p&gt;Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.&lt;/p&gt;</solution>
+						<otherinfo></otherinfo>
+						<reference>&lt;p&gt;https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy&lt;/p&gt;&lt;p&gt;https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html&lt;/p&gt;&lt;p&gt;https://www.w3.org/TR/CSP/&lt;/p&gt;&lt;p&gt;https://w3c.github.io/webappsec-csp/&lt;/p&gt;&lt;p&gt;https://web.dev/articles/csp&lt;/p&gt;&lt;p&gt;https://caniuse.com/#feat=contentsecuritypolicy&lt;/p&gt;&lt;p&gt;https://content-security-policy.com/&lt;/p&gt;</reference>
+						<cweid>693</cweid>
+						<wascid>15</wascid>
+						<sourceid>3</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10098</pluginid>
+						<alertRef>10098</alertRef>
+						<alert>Cross-Domain Misconfiguration</alert>
+						<name>Cross-Domain Misconfiguration</name>
+						<riskcode>2</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Medium (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;Web browser data loading may be possible, due to a Cross Origin Resource Sharing (CORS) misconfiguration on the web server.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/api/Challenges/?name=Score%20Board</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/api/Quantitys/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/i18n/en.json</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/favicon_js.ico</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/JuiceShop_Logo.png</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/apple_juice.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/apple_pressings.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/artwork2.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/banana_juice.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/carrot_juice.jpeg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/eggfruit_juice.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/fan_facemask.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/fruit_press.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/green_smoothie.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/lemon_juice.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/melon_bike.jpeg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/assets/public/images/products/permafrost.jpg</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/main.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/MaterialIcons-Regular.woff2</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/polyfills.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/admin/application-configuration</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/admin/application-version</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/languages</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/products/search?q=</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/runtime.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/vendor.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Access-Control-Allow-Origin: *</evidence>
+									<otherinfo>The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>28</count>
+						<solution>&lt;p&gt;Ensure that sensitive data is not available in an unauthenticated manner (using IP address white-listing, for instance).&lt;/p&gt;&lt;p&gt;Configure the &quot;Access-Control-Allow-Origin&quot; HTTP header to a more restrictive set of domains, or remove all CORS headers entirely, to allow the web browser to enforce the Same Origin Policy (SOP) in a more restrictive manner.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://vulncat.fortify.com/en/detail?id=desc.config.dotnet.html5_overly_permissive_cors_policy&lt;/p&gt;</reference>
+						<cweid>264</cweid>
+						<wascid>14</wascid>
+						<sourceid>3</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10020</pluginid>
+						<alertRef>10020-1</alertRef>
+						<alert>Missing Anti-clickjacking Header</alert>
+						<name>Missing Anti-clickjacking Header</name>
+						<riskcode>2</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Medium (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;The response does not protect against &apos;ClickJacking&apos; attacks. It should include either Content-Security-Policy with &apos;frame-ancestors&apos; directive or X-Frame-Options.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6tS&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>POST</method>
+									<param>x-frame-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ76e&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>POST</method>
+									<param>x-frame-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+						</instances>
+						<count>2</count>
+						<solution>&lt;p&gt;Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.&lt;/p&gt;&lt;p&gt;If you expect the page to be framed only by pages on your server (e.g. it&apos;s part of a FRAMESET) then you&apos;ll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy&apos;s &quot;frame-ancestors&quot; directive.&lt;/p&gt;</solution>
+						<otherinfo></otherinfo>
+						<reference>&lt;p&gt;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options&lt;/p&gt;</reference>
+						<cweid>1021</cweid>
+						<wascid>15</wascid>
+						<sourceid>40</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>3</pluginid>
+						<alertRef>3-1</alertRef>
+						<alert>Session ID in URL Rewrite</alert>
+						<name>Session ID in URL Rewrite</name>
+						<riskcode>2</riskcode>
+						<confidence>3</confidence>
+						<riskdesc>Medium (High)</riskdesc>
+						<confidencedesc>High</confidencedesc>
+						<desc>&lt;p&gt;URL rewrite is used to track user session ID. The session ID may be disclosed via cross-site referer header. In addition, the session ID might be stored in browser history or server logs.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6tU&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>GET</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>k6kfDEDSrRvv0st6AAIt</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ76g&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>GET</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>vMkrsz5mu5wYP0NeAAIv</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ77K&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>GET</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>vMkrsz5mu5wYP0NeAAIv</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=websocket&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>GET</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>k6kfDEDSrRvv0st6AAIt</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=websocket&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>GET</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>vMkrsz5mu5wYP0NeAAIv</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6tS&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>POST</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>k6kfDEDSrRvv0st6AAIt</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ76e&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>POST</method>
+									<param>sid</param>
+									<attack></attack>
+									<evidence>vMkrsz5mu5wYP0NeAAIv</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+						</instances>
+						<count>7</count>
+						<solution>&lt;p&gt;For secure content, put session ID in a cookie. To be even more secure consider using a combination of cookie and URL rewrite.&lt;/p&gt;</solution>
+						<otherinfo></otherinfo>
+						<reference>&lt;p&gt;https://seclists.org/webappsec/2002/q4/111&lt;/p&gt;</reference>
+						<cweid>598</cweid>
+						<wascid>13</wascid>
+						<sourceid>42</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10017</pluginid>
+						<alertRef>10017</alertRef>
+						<alert>Cross-Domain JavaScript Source File Inclusion</alert>
+						<name>Cross-Domain JavaScript Source File Inclusion</name>
+						<riskcode>1</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Low (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;The page includes one or more script files from a third-party domain.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param>//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js</param>
+									<attack></attack>
+									<evidence>&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js&quot;&gt;&lt;/script&gt;</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param>//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js</param>
+									<attack></attack>
+									<evidence>&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js&quot;&gt;&lt;/script&gt;</evidence>
+									<otherinfo></otherinfo>
+								</instance>
+							
+						</instances>
+						<count>2</count>
+						<solution>&lt;p&gt;Ensure JavaScript source files are loaded from only trusted sources, and the sources can&apos;t be controlled by end users of the application.&lt;/p&gt;</solution>
+						<otherinfo></otherinfo>
+						<reference></reference>
+						<cweid>829</cweid>
+						<wascid>15</wascid>
+						<sourceid>3</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>2</pluginid>
+						<alertRef>2</alertRef>
+						<alert>Private IP Disclosure</alert>
+						<name>Private IP Disclosure</name>
+						<riskcode>1</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Low (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;A private IP (such as 10.x.x.x, 172.x.x.x, 192.168.x.x) or an Amazon EC2 private hostname (for example, ip-10-0-56-78) has been found in the HTTP response body. This information might be helpful for further attacks targeting internal systems.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/rest/admin/application-configuration</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>192.168.99.100:3000</evidence>
+									<otherinfo>192.168.99.100:3000
+192.168.99.100:4200
+</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>1</count>
+						<solution>&lt;p&gt;Remove the private IP address from the HTTP response body. For comments, use JSP/ASP/PHP comment instead of HTML/JavaScript comment which can be seen by client browsers.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;192.168.99.100:3000&lt;/p&gt;&lt;p&gt;192.168.99.100:4200&lt;/p&gt;&lt;p&gt;&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://tools.ietf.org/html/rfc1918&lt;/p&gt;</reference>
+						<cweid>497</cweid>
+						<wascid>13</wascid>
+						<sourceid>25</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10096</pluginid>
+						<alertRef>10096</alertRef>
+						<alert>Timestamp Disclosure - Unix</alert>
+						<name>Timestamp Disclosure - Unix</name>
+						<riskcode>1</riskcode>
+						<confidence>1</confidence>
+						<riskdesc>Low (Low)</riskdesc>
+						<confidencedesc>Low</confidencedesc>
+						<desc>&lt;p&gt;A timestamp was disclosed by the application/web server. - Unix&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1650485437</evidence>
+									<otherinfo>1650485437, which evaluates to: 2022-04-20 22:10:37.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1981395349</evidence>
+									<otherinfo>1981395349, which evaluates to: 2032-10-14 21:35:49.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>2038834951</evidence>
+									<otherinfo>2038834951, which evaluates to: 2034-08-10 17:02:31.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/main.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1734944650</evidence>
+									<otherinfo>1734944650, which evaluates to: 2024-12-23 10:04:10.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/admin/application-configuration</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1969196030</evidence>
+									<otherinfo>1969196030, which evaluates to: 2032-05-26 16:53:50.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/admin/application-configuration</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1970691216</evidence>
+									<otherinfo>1970691216, which evaluates to: 2032-06-13 00:13:36.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/products/search?q=</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1969196030</evidence>
+									<otherinfo>1969196030, which evaluates to: 2032-05-26 16:53:50.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/rest/products/search?q=</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1970691216</evidence>
+									<otherinfo>1970691216, which evaluates to: 2032-06-13 00:13:36.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1650485437</evidence>
+									<otherinfo>1650485437, which evaluates to: 2022-04-20 22:10:37.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1680327869</evidence>
+									<otherinfo>1680327869, which evaluates to: 2023-04-01 07:44:29.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1701244813</evidence>
+									<otherinfo>1701244813, which evaluates to: 2023-11-29 09:00:13.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1818181818</evidence>
+									<otherinfo>1818181818, which evaluates to: 2027-08-13 20:30:18.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1839622642</evidence>
+									<otherinfo>1839622642, which evaluates to: 2028-04-18 00:17:22.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1863874346</evidence>
+									<otherinfo>1863874346, which evaluates to: 2029-01-23 15:52:26.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1917098446</evidence>
+									<otherinfo>1917098446, which evaluates to: 2030-10-01 17:20:46.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>1981395349</evidence>
+									<otherinfo>1981395349, which evaluates to: 2032-10-14 21:35:49.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>2033195021</evidence>
+									<otherinfo>2033195021, which evaluates to: 2034-06-06 10:23:41.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/styles.css</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>2038834951</evidence>
+									<otherinfo>2038834951, which evaluates to: 2034-08-10 17:02:31.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>18</count>
+						<solution>&lt;p&gt;Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;1650485437, which evaluates to: 2022-04-20 22:10:37.&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://cwe.mitre.org/data/definitions/200.html&lt;/p&gt;</reference>
+						<cweid>497</cweid>
+						<wascid>13</wascid>
+						<sourceid>3</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10021</pluginid>
+						<alertRef>10021</alertRef>
+						<alert>X-Content-Type-Options Header Missing</alert>
+						<name>X-Content-Type-Options Header Missing</name>
+						<riskcode>1</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Low (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;The Anti-MIME-Sniffing header X-Content-Type-Options was not set to &apos;nosniff&apos;. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6re</uri>
+									<method>GET</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6tU&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>GET</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ74j</uri>
+									<method>GET</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ76g&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>GET</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ77K&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>GET</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ7Mt</uri>
+									<method>GET</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ6tS&amp;sid=k6kfDEDSrRvv0st6AAIt</uri>
+									<method>POST</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/socket.io/?EIO=4&amp;transport=polling&amp;t=PPuZ76e&amp;sid=vMkrsz5mu5wYP0NeAAIv</uri>
+									<method>POST</method>
+									<param>x-content-type-options</param>
+									<attack></attack>
+									<evidence></evidence>
+									<otherinfo>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.
+At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>8</count>
+						<solution>&lt;p&gt;Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to &apos;nosniff&apos; for all web pages.&lt;/p&gt;&lt;p&gt;If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.&lt;/p&gt;&lt;p&gt;At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.&lt;/p&gt;</otherinfo>
+						<reference>&lt;p&gt;https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)&lt;/p&gt;&lt;p&gt;https://owasp.org/www-community/Security_Headers&lt;/p&gt;</reference>
+						<cweid>693</cweid>
+						<wascid>15</wascid>
+						<sourceid>23</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10027</pluginid>
+						<alertRef>10027</alertRef>
+						<alert>Information Disclosure - Suspicious Comments</alert>
+						<name>Information Disclosure - Suspicious Comments</name>
+						<riskcode>0</riskcode>
+						<confidence>1</confidence>
+						<riskdesc>Informational (Low)</riskdesc>
+						<confidencedesc>Low</confidencedesc>
+						<desc>&lt;p&gt;The response appears to contain suspicious comments which may help an attacker.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/main.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>query</evidence>
+									<otherinfo>The following pattern was used: \bQUERY\b and was detected in likely comment: &quot;//owasp.org&apos; target=&apos;_blank&apos;&gt;Open Worldwide Application Security Project (OWASP)&lt;/a&gt; and is developed and maintained by voluntee&quot;, see evidence field for the suspicious comment/snippet.</otherinfo>
+								</instance>
+							
+							
+								<instance>
+									<uri>http://localhost:3000/vendor.js</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>Query</evidence>
+									<otherinfo>The following pattern was used: \bQUERY\b and was detected in likely comment: &quot;//www.w3.org/2000/svg&quot; viewBox=&quot;0 0 512 512&quot;&gt;&lt;path d=&quot;M0 256C0 397.4 114.6 512 256 512s256-114.6 256-256S397.4 0 256 0S0 114.6 0&quot;, see evidence field for the suspicious comment/snippet.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>2</count>
+						<solution>&lt;p&gt;Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;The following pattern was used: \bQUERY\b and was detected in likely comment: &quot;//owasp.org&apos; target=&apos;_blank&apos;&gt;Open Worldwide Application Security Project (OWASP)&lt;/a&gt; and is developed and maintained by voluntee&quot;, see evidence field for the suspicious comment/snippet.&lt;/p&gt;</otherinfo>
+						<reference></reference>
+						<cweid>615</cweid>
+						<wascid>13</wascid>
+						<sourceid>7</sourceid>
+					</alertitem>
+				
+				
+					<alertitem>
+						<pluginid>10109</pluginid>
+						<alertRef>10109</alertRef>
+						<alert>Modern Web Application</alert>
+						<name>Modern Web Application</name>
+						<riskcode>0</riskcode>
+						<confidence>2</confidence>
+						<riskdesc>Informational (Medium)</riskdesc>
+						<confidencedesc>Medium</confidencedesc>
+						<desc>&lt;p&gt;The application appears to be a modern web application. If you need to explore it automatically then the Ajax Spider may well be more effective than the standard one.&lt;/p&gt;</desc>
+						<instances>
+							
+								<instance>
+									<uri>http://localhost:3000/</uri>
+									<method>GET</method>
+									<param></param>
+									<attack></attack>
+									<evidence>&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js&quot;&gt;&lt;/script&gt;</evidence>
+									<otherinfo>No links have been found while there are scripts, which is an indication that this is a modern web application.</otherinfo>
+								</instance>
+							
+						</instances>
+						<count>1</count>
+						<solution>&lt;p&gt;This is an informational alert and so no changes are required.&lt;/p&gt;</solution>
+						<otherinfo>&lt;p&gt;No links have been found while there are scripts, which is an indication that this is a modern web application.&lt;/p&gt;</otherinfo>
+						<reference></reference>
+						<cweid>-1</cweid>
+						<wascid>-1</wascid>
+						<sourceid>3</sourceid>
+					</alertitem>
+				
+			</alerts>
+		</site>
+	
+</OWASPZAPReport>

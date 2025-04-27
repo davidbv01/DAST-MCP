@@ -18,35 +18,32 @@ def on_event(event: StreamEvent):
             role = message.role.value.upper()
             text_list = [c.text for c in message.content if c.type == 'text']
             text = text_list[0] if text_list else "(Sin texto)"
-            if message.role.value == 'assistant' or message.role.value == 'user':
-                print(f"[{role}] ➜ {text}")
-
-def on_error(event: StreamEvent):
-    global last_message_count
-    last_message_count = 0  # Reiniciar el contador de mensajes en caso de error
-    if event.event == StreamEvents.Error:
-        print(f"[ERROR] {event.error.message}")
+            print(f"[{role}] ➜ {text}")
 
 def on_finished(event: StreamEvent):
     global last_message_count
     last_message_count = 0  # Reiniciar el contador de mensajes en caso de error
-    if event.event == StreamEvents.Finished:
-        print(f"[FINISHED] {event.result.uuid}")
+    print(f"[FINISHED] {event.uuid}")
+
+def on_error(event: StreamEvent):
+    global last_message_count
+    last_message_count = 0  # Reiniciar el contador de mensajes en caso de error
+    print(f"[ERROR] {event}")
 
 # Función principal asíncrona
 async def main(): 
     result = await sdk.prompts.run('LoginAgent', RunPromptOptions(
         version_uuid='b02c79f6-502a-4297-8318-3105c8757793',
         parameters={
-            'url': 'https://www.hackthissite.org/',
-            'username': 'davidborregolatitude',
+            'url': 'http://localhost:3000/',
+            'username': 'test@test.com',
             'password': 'LatitudeHack2025'
         },
         # Enable streaming
         stream=True,
         # Provide callbacks for events
         on_finished=on_finished,
-        on_error=on_error,
+        on_error= on_error,
         on_event=on_event
     ))
     return result
