@@ -1,36 +1,50 @@
 from pydantic import BaseModel
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
-from typing import List
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from contextlib import asynccontextmanager
 from bs4 import BeautifulSoup
 from fastapi.responses import RedirectResponse
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi_mcp import FastApiMCP
+from urllib.parse import urljoin
 from zapv2 import ZAPv2
+import asyncio
 
+apiKey = 'e2q0nlun84j194hscevlrem7d0'
 driver = None
+driver_lock = asyncio.Lock()
+
+# Configurar ZAP como proxy
+zap_proxy = 'localhost:8080'  # ZAP proxy por defecto
+
+# Configurar el proxy en el navegador de Selenium
+proxy = Proxy()
+proxy.proxy_type = ProxyType.MANUAL
+proxy.http_proxy = zap_proxy
+proxy.ssl_proxy = zap_proxy
 
 # Define the FastAPI app
 app = FastAPI()
 
+# Iniciar ZAP API
+zap = ZAPv2(apikey=apiKey)
+
 class NavigateRequest(BaseModel):
     url: str
 
-class InputStep(BaseModel):
+class InputRequest(BaseModel):
     selector: str
     content: str
-    is_password_field: bool = False
-
-class InputRequest(BaseModel):
-    steps: List[InputStep]
 
 class ClickRequest(BaseModel):
     selector: str
+    isLogInButton: bool = False
 
-def get_html(soup):
+def get_html(soup, base_url):
     links = []
     inputs = []
     buttons = []
@@ -40,6 +54,9 @@ def get_html(soup):
         if el.name == "a":
             href = el.get("href")
             text = el.get_text().strip()
+            # Ensure the href is absolute
+            if href:
+                href = urljoin(base_url, href)  # Convert to absolute URL
             # Guardamos solo si tiene href y texto
             if href or text:
                 links.append({
@@ -77,6 +94,9 @@ def get_html(soup):
             form_action = el.get("action")
             form_method = el.get("method")
             form_fields = [input_el.get("name") for input_el in el.find_all("input") if input_el.get("name")]
+            # Ensure the action is absolute
+            if form_action:
+                form_action = urljoin(base_url, form_action)  # Convert to absolute URL
             # Guardamos aunque no haya fields (algunos forms no tienen inputs directos)
             forms.append({
                 "action": form_action,
@@ -92,6 +112,14 @@ def get_html(soup):
     }
     return summary
 
+def cookies_changed(before, after):
+    """Compares two cookie lists and returns True if they have changed."""
+    # Convert the cookies to simpler dictionaries for comparison
+    before_set = {cookie['name']: cookie['value'] for cookie in before}
+    after_set = {cookie['name']: cookie['value'] for cookie in after}
+    
+    return before_set != after_set
+
 
 # Startup and shutdown logic for the WebDriver
 @asynccontextmanager
@@ -100,6 +128,8 @@ async def app_lifespan(app: FastAPI):  # Aceptar el argumento 'app'
     # Startup
     options = Options()
     options.headless = False  # VISUAL MODE
+    options.proxy = proxy  # Set the proxy
+    options.add_argument("--proxy-bypass-list=<-loopback>") # Bypass localhost
     driver = webdriver.Chrome(options=options)
     try:
         yield
@@ -121,84 +151,116 @@ async def redirect_sse():
 async def navigate(request: NavigateRequest):
     "Navigate to a URL and extract elements like links, inputs, buttons, and forms from the page."
     try:
-        driver.get(request.url)
-        # wait for the page to load
-        driver.implicitly_wait(5)
-        # Extract elements
-        summary = get_html(BeautifulSoup(driver.page_source, 'html.parser'))
+        async with driver_lock:
+            driver.get(request.url)
+            # wait for the page to load
+            WebDriverWait(driver, 10).until(
+                lambda d: d.execute_script("return document.readyState") == "complete"
+            )
+            # Extract elements
+            summary = get_html(BeautifulSoup(driver.page_source, 'html.parser'),request.url)
 
         return {"success": True, "elements": summary}
 
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/input_text",
           operation_id="input_text")
 async def input_text(request: InputRequest):
     "Input text into an input field specified by the selector."
     try:
-        # Separar primero los que no son password y luego los que sí
-        normal_inputs = [step for step in request.steps if not step.is_password_field]
-        password_inputs = [step for step in request.steps if step.is_password_field]
-        
-        ordered_steps = normal_inputs + password_inputs
-
-        for step in ordered_steps:
-            element = driver.find_element(By.CSS_SELECTOR, step.selector)
+        async with driver_lock:
+            # Wait for the element to be present and visible on the page
+            element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, request.selector))
+            )
+            
+            # Clear the input field and input the content
             element.clear()
-            element.send_keys(step.content)
-            driver.implicitly_wait(5)
-
-            if step.is_password_field:
-                cookies_before = driver.get_cookies()
-                element.send_keys(Keys.RETURN)
-                driver.implicitly_wait(5)
-                cookies_after = driver.get_cookies()
-                if cookies_before != cookies_after:
-                    return {"success": True, "isLogged": True, "cookies": cookies_after}
-                else:
-                    return {"success": True, "isLogged": False}
+            element.send_keys(request.content)
+        
+        return {"success": True}
     
-        return {"success": True, "isLogged": False}
-
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        # Raise an HTTP exception with a detailed error message
+        raise HTTPException(status_code=500, detail=f"Error while inputting text: {str(e)}")
 
 @app.post("/click_element",
           operation_id="click_element")
 async def click_element(request: ClickRequest):
     "Click an element specified by the selector."
     try:
-        cookies_before = driver.get_cookies()
-        element = driver.find_element(By.CSS_SELECTOR, request.selector)
-        # wait for the page to load
-        driver.implicitly_wait(5)
-        #Obtain the new page source
-        cookies_after = driver.get_cookies()
-        # Check if the cookies have changed
-        if cookies_before != cookies_after:
-            # Extract elements
-            summary = get_html(BeautifulSoup(driver.page_source, 'html.parser'))
-            # Return the new page source
-            return {"success": True, "isLogged":True, "cookies": cookies_after}
-        element.click()
-        return {"success": True, "isLogged":False}
+        async with driver_lock:
+            # Find the element
+            element = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, request.selector))
+            )
+            
+            is_logged = None
+
+            if request.isLogInButton:
+                # 1. Get cookies before clicking
+                cookies_before = driver.get_cookies()
+
+                # 2. Click the element
+                element.click()
+
+                # 3. Wait for login to finish processing
+                WebDriverWait(driver, 15).until(
+                    EC.url_changes(driver.current_url)  # Espera un cambio en la URL
+                )
+
+                # 4. Get cookies after clicking
+                cookies_after = driver.get_cookies()
+
+                # 5. Compare cookies
+                is_logged = cookies_changed(cookies_before, cookies_after)
+
+            else:
+                # If it's not a login button, just click
+                element.click()
+
+        return {
+            "success": True,
+            "isLogged": is_logged 
+        }
+
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/execute_scan",
+          operation_id="execute_scan")
+async def execute_scan(request: NavigateRequest):
+    "Execute a scan using ZAP API."
+    try:
+        scan_id = zap.ajaxSpider.scan(request.url)
+        return {
+            "success": True
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/get_cookies",
           operation_id="get_cookies")
 async def get_cookies():
     "Retrieve the cookies stored by the WebDriver."
     try:
-        cookies = driver.get_cookies()
+        async with driver_lock:
+            cookies = driver.get_cookies()
         return {"success": True, "cookies": cookies}
     except Exception as e:
-        return {"success": False, "error": str(e)}    
+        raise HTTPException(status_code=500, detail=str(e))
 
 mcp = FastApiMCP(app,
                 description="MCP Server for web scraping for cibersecurity",
-                describe_all_responses=True,
-                describe_full_response_schema=True)
+                describe_all_responses=False,
+                describe_full_response_schema=False)
 
 mcp.mount()
+
+
+if __name__ == "__main__":
+    import uvicorn
+    # Run the FastAPI app with Uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
