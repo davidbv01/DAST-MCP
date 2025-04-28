@@ -3,7 +3,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 import asyncio
 import logging
-from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import os
 
@@ -24,8 +23,7 @@ proxy.ssl_proxy = zap_proxy
 driver = None
 driver_lock = asyncio.Lock()
 
-@asynccontextmanager
-async def selenium_driver():
+def selenium_startup():
     global driver
     # Start Selenium WebDriver
     options = Options()
@@ -33,8 +31,14 @@ async def selenium_driver():
     options.proxy = proxy
     options.add_argument("--proxy-bypass-list=<-loopback>")  # Bypass localhost
     driver = webdriver.Chrome(options=options)
-    try:
-        yield driver
-    finally:
-        if driver:
+        
+
+def selenium_shutdown():
+    if driver:
             driver.quit()
+    
+def get_driver():
+    global driver
+    if driver is None:
+        driver = webdriver.Chrome()  # Puedes usar el driver que necesites, como Firefox, etc.
+    return driver

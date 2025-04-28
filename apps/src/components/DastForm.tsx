@@ -19,20 +19,11 @@ export default function DastForm({ onSubmit }: DastFormProps) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showCredentials, setShowCredentials] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Llamar a la función onSubmit para manejar los datos del formulario
-    onSubmit({
-      url,
-      email,
-      username,
-      password,
-    });
-    
-    // Llamar a la función para hacer la petición GET
+    console.log('Handle Submit Start');
+    onSubmit({ url, email, username, password });
     launchScan();
   };
 
@@ -53,21 +44,25 @@ export default function DastForm({ onSubmit }: DastFormProps) {
 
   const launchScan = async () => {
     try {
-      const response = await fetch('http://localhost:8000/scan', {
-        method: 'GET', // O 'POST' si necesitas enviar los datos en el cuerpo de la solicitud
+      console.log('Handle Fetch Start');
+      const response = await fetch('http://localhost:8000/start_latitude', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          url,
-          email,
-          username,
-          password
+          url: url,
+          username: username,
+          password: password,
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      console.log('Backend Response:', data); // Mostrar la respuesta del backend
+      console.log('Backend Response:', data);
     } catch (error) {
       console.error('Error al lanzar el escaneo:', error);
     }
@@ -115,42 +110,28 @@ export default function DastForm({ onSubmit }: DastFormProps) {
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="credentials"
-              checked={showCredentials}
-              onChange={() => setShowCredentials(!showCredentials)}
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-            />
-            <Label htmlFor="credentials" className="text-sm">
-              Target requires authentication
-            </Label>
-          </div>
-
-          {showCredentials && (
-            <div className="space-y-4 pt-2">
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+          {/* Siempre mostrar Username y Password */}
+          <div className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
-          )}
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
 
           <Button 
             type="submit" 

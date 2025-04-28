@@ -10,3 +10,8 @@ class InputRequest(BaseModel):
 class ClickRequest(BaseModel):
     selector: str
     isLogInButton: bool = False
+
+class LatitudeRequest(BaseModel):
+    url: str
+    username: str
+    password: str

@@ -1,40 +1,25 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from models.requests import NavigateRequest, InputRequest, ClickRequest
-from selenium_services import selenium_driver
-from zap_service import run_zap_full_scan
+from models.requests import NavigateRequest, InputRequest, ClickRequest, LatitudeRequest
+from services.selenium_service import get_driver
+from services.zap_service import run_zap_full_scan
+from services.latitude_service import start_latitude
+from utils.utils import cookies_changed, get_html
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 import logging
+import asyncio
+import io
 
 router = APIRouter()
-
-def get_html(soup, base_url):
-    links = []
-    inputs = []
-    buttons = []
-    forms = []
-
-    for el in soup.find_all(["a", "input", "button", "form"]):
-        if el.name == "a":
-            href = el.get("href")
-            text = el.get_text().strip()
-            if href:
-                href = urljoin(base_url, href)  # Convert to absolute URL
-            if href or text:
-                links.append({
-                    "href": href,
-                    "text": text
-                })
-        # Similar logic for other tags (input, button, form)
-
-    return {"links": links, "inputs": inputs, "buttons": buttons, "forms": forms}
 
 @router.post("/navigate")
 async def navigate(request: NavigateRequest):
     try:
-        async with selenium_driver() as driver:
+        async with get_driver() as driver:
             driver.get(request.url)
             WebDriverWait(driver, 10).until(
                 lambda d: d.execute_script("return document.readyState") == "complete"
@@ -47,7 +32,7 @@ async def navigate(request: NavigateRequest):
 @router.post("/input_text")
 async def input_text(request: InputRequest):
     try:
-        async with selenium_driver() as driver:
+        async with get_driver() as driver:
             element = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, request.selector))
             )
@@ -60,7 +45,7 @@ async def input_text(request: InputRequest):
 @router.post("/click_element")
 async def click_element(request: ClickRequest):
     try:
-        async with selenium_driver() as driver:
+        async with get_driver() as driver:
             element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, request.selector))
             )
@@ -83,4 +68,21 @@ async def execute_scan(request: NavigateRequest):
         asyncio.create_task(run_zap_full_scan(request.url))
         return {"success": True, "message": "Scan started in background"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/start_latitude")
+async def execute_scan(request: LatitudeRequest):
+    try:
+        asyncio.create_task(start_latitude(request.url, request.username, request.password))
+        return {"success": True, "message": "Scan started in background"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/screenshot")
+async def get_screenshot():
+    try:
+        driver = get_driver()  # get_driver() debe devolverte un driver ya levantado
+        png = driver.get_screenshot_as_png()
+        return StreamingResponse(io.BytesIO(png), media_type="image/png")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

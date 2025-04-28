@@ -33,13 +33,13 @@ def on_error(event: StreamEvent):
     print(f"[ERROR] {event}")
 
 # Función principal asíncrona
-async def main(): 
+async def start_latitude(url, username, password): 
     result = await sdk.prompts.run('LoginAgent', RunPromptOptions(
         version_uuid='b02c79f6-502a-4297-8318-3105c8757793',
         parameters={
-            'url': 'http://localhost:3000/',
-            'username': 'test@test.com',
-            'password': 'LatitudeHack2025'
+            'url': url,
+            'username': username,
+            'password': password
         },
         # Enable streaming
         stream=True,
@@ -52,5 +52,5 @@ async def main():
 
 # Llamar a main() usando asyncio.run()
 if __name__ == "__main__":
-    result = asyncio.run(main())
+    result = asyncio.run(start_latitude())
     print('\nFINAL RESULT:', result)

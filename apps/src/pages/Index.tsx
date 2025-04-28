@@ -72,7 +72,6 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           {/* Bottom row - Progress and AI Messages */}
           <ScanProgress isScanning={scanning} onComplete={handleScanComplete} />
-          <AiMessagePanel isScanning={scanning || scanComplete} />
         </div>
       </div>
     </div>
