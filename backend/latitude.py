@@ -1,11 +1,13 @@
 import asyncio
 from latitude_sdk import Latitude, LatitudeOptions, RunPromptOptions, StreamEvent, StreamEvents, ChainEvents
 from typing import Any, Union
+from dotenv import load_dotenv
+import os
 
 last_message_count = 0
 
 # Do not expose the API key in client-side code
-sdk = Latitude('bb53b630-9f3a-4070-8534-2194ca79080d', LatitudeOptions(project_id=16054))
+sdk = Latitude(os.getenv("LATITUDE_API_KEY"), LatitudeOptions(project_id=16054))
 
 def on_event(event: StreamEvent):
     global last_message_count

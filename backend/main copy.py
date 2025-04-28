@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from models.requests import NavigateRequest, InputRequest, ClickRequest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.proxy import Proxy, ProxyType
@@ -14,14 +14,16 @@ from urllib.parse import urljoin
 from zapv2 import ZAPv2
 import asyncio
 import logging
+from dotenv import load_dotenv
+import os
 
-apiKey = 'e2q0nlun84j194hscevlrem7d0'
+apiKey = os.getenv("ZAP_API_KEY")
 driver = None
 driver_lock = asyncio.Lock()
 logging.basicConfig(level=logging.INFO)
 
 # Configurar ZAP como proxy
-zap_proxy = 'localhost:8080'  # ZAP proxy por defecto
+zap_proxy = os.getenv("ZAP_PROXY") # ZAP proxy por defecto
 
 # Configurar el proxy en el navegador de Selenium
 proxy = Proxy()
@@ -34,17 +36,6 @@ app = FastAPI()
 
 # Iniciar ZAP API
 zap = ZAPv2(apikey=apiKey)
-
-class NavigateRequest(BaseModel):
-    url: str
-
-class InputRequest(BaseModel):
-    selector: str
-    content: str
-
-class ClickRequest(BaseModel):
-    selector: str
-    isLogInButton: bool = False
 
 def get_html(soup, base_url):
     links = []
