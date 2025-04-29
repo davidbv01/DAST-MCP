@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface BrowserPreviewProps {
@@ -7,37 +7,43 @@ interface BrowserPreviewProps {
 }
 
 export default function BrowserPreview({ active, url }: BrowserPreviewProps) {
-  const [screenshot, setScreenshot] = useState<string | null>(null); // Estado para almacenar la imagen
+  const [logs, setLogs] = useState<string[]>([]); // Estado para almacenar los logs
+  const [isScrapingFinished, setIsScrapingFinished] = useState(false); // Estado para saber si ha terminado el scraping
 
   useEffect(() => {
     if (active) {
-      const fetchScreenshot = async () => {
+      const fetchLogs = async () => {
         try {
-          const response = await fetch("http://localhost:8000/screenshot"); // Cambia la URL según tu servidor
+          const response = await fetch("http://localhost:8000/logs"); // Cambia la URL según tu servidor
           if (response.ok) {
-            const blob = await response.blob(); // Convierte la respuesta en un blob
-            const imageUrl = URL.createObjectURL(blob); // Crea un URL temporal para la imagen
-            setScreenshot(imageUrl); // Guarda la URL en el estado
+            const logData = await response.json(); // Suponemos que la respuesta es un JSON
+            setLogs(logData.logs); // Guarda los logs en el estado
           } else {
-            console.error("Failed to fetch screenshot");
+            console.error("Failed to fetch logs");
           }
         } catch (error) {
-          console.error("Error fetching screenshot:", error);
+          console.error("Error fetching logs:", error);
         }
       };
 
-      // Inicializa la captura de pantalla al activar el componente
-      fetchScreenshot();
-
-      // Configura un intervalo para actualizar la captura de pantalla periódicamente (cada 5 segundos)
+      // Configura un intervalo para actualizar los logs periódicamente (cada 1 segundo)
       const intervalId = setInterval(() => {
-        fetchScreenshot();
-      }, 1000); // 1 segundo
+        fetchLogs();
+      }, 1000);
 
-      // Limpia el intervalo cuando el componente se desactive
+      // Limpia el intervalo cuando el componente se desactive o termine el scraping
       return () => clearInterval(intervalId);
     }
   }, [active]);
+
+  useEffect(() => {
+    // Esta función se puede llamar cuando el scraping termina en el backend
+    // Aquí asumimos que hay alguna lógica que determina cuándo terminó el scraping
+    if (isScrapingFinished) {
+      // Cuando el scraping haya terminado, comienza a mostrar los logs en vez de la captura
+      setLogs(["Scraping finished. Now starting the ZAP scan..."]); // Mostrar mensaje de inicio de ZAP
+    }
+  }, [isScrapingFinished]);
 
   if (!active) {
     return (
@@ -61,12 +67,16 @@ export default function BrowserPreview({ active, url }: BrowserPreviewProps) {
       </div>
       <CardContent className="p-0">
         <div className="bg-card border-t-0 h-[650px] overflow-auto p-4">
-          {/* Render the screenshot if available */}
-          {screenshot ? (
-            <img src={screenshot} alt="Browser Screenshot" className="w-full h-auto" />
+          {/* Mostrar los logs si están disponibles */}
+          {!isScrapingFinished ? (
+            <div className="text-xs text-muted-foreground my-1">Loading logs...</div>
           ) : (
             <div className="text-xs text-muted-foreground my-1">
-              Loading screenshot...
+              {logs.length > 0 ? (
+                logs.map((log, index) => <div key={index}>{log}</div>)
+              ) : (
+                <p>No logs available.</p>
+              )}
             </div>
           )}
         </div>
