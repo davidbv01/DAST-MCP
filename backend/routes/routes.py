@@ -130,6 +130,8 @@ async def get_logs():
 
         with open(LOG_FILE_PATH, "r", encoding='utf-8') as file:
             logs = file.read()
+            # Log the contents to see what's inside
+            print("File content:", repr(logs))
 
         return logs  # Return logs as plain text
 

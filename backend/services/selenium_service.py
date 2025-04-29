@@ -37,12 +37,11 @@ def selenium_startup():
         driver = create_driver()
         
 def selenium_shutdown():
+    global driver
     if driver:
             driver.quit()
             driver = None
     
 def get_driver():
     global driver
-    if driver is None:
-        driver = create_driver()
     return driver

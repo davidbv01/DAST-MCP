@@ -5,6 +5,8 @@ interface BrowserPreviewProps {
   url: string;
   logs: string;
   isScrapingFinished: boolean;
+  isLatitudeEnable: boolean;
+  screenshot: string | null;
 }
 
 export default function BrowserPreview({
@@ -12,6 +14,8 @@ export default function BrowserPreview({
   url,
   logs,
   isScrapingFinished,
+  isLatitudeEnable,
+  screenshot,
 }: BrowserPreviewProps) {
   if (!active) {
     return (
@@ -35,17 +39,26 @@ export default function BrowserPreview({
       </div>
       <CardContent className="p-0">
         <div className="bg-card border-t-0 h-[650px] overflow-auto p-4">
-          {/* Show logs or a message based on scraping status */}
-          {!isScrapingFinished ? (
-            <div className="text-xs text-muted-foreground my-1">Loading logs...</div>
+          {/* Show screenshot while scraping is enabled */}
+          {isLatitudeEnable && screenshot ? (
+            <div className="my-2">
+              <img src={screenshot} alt="Screenshot" className="w-full h-auto" />
+            </div>
           ) : (
+            <div className="text-xs text-muted-foreground my-1">Loading screenshot...</div>
+          )}
+
+          {/* Show logs once scraping is finished */}
+          {isScrapingFinished ? (
             <div className="text-xs text-muted-foreground my-1">
               {logs.length > 0 ? (
-                <pre>{logs}</pre> // Display logs as preformatted text
+                <pre>{logs}</pre>
               ) : (
                 <p>No logs available.</p>
               )}
             </div>
+          ) : (
+            <div className="text-xs text-muted-foreground my-1">Loading logs...</div>
           )}
         </div>
       </CardContent>

@@ -15,7 +15,7 @@ apiKey = os.getenv("ZAP_API_KEY")
 # Initialize ZAP API
 zap = ZAPv2(apikey=apiKey)
 
-async def run_zap_full_scan(target_url):
+async def run_zap_spider(target_url):
     logger.info("[*] Starting traditional Spider...")
     spider_id = zap.spider.scan(target_url)
     while int(zap.spider.status(spider_id)) < 100:
@@ -28,6 +28,7 @@ async def run_zap_full_scan(target_url):
         await asyncio.sleep(2)
     logger.info("[*] AJAX Spider completed!")
 
+async def run_zap_scan(target_url):
     logger.info("[*] Starting Active Scan...")
     active_scan_id = zap.ascan.scan(target_url)
     while int(zap.ascan.status(active_scan_id)) < 100:

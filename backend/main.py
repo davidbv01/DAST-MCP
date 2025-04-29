@@ -15,7 +15,7 @@ app = FastAPI()
 async def app_lifespan(app: FastAPI):  # Aceptar el argumento 'app'
     # Startup
     try:
-        selenium_startup()
+        #selenium_startup()
         yield
     finally:
         # Shutdown

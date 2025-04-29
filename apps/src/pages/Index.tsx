@@ -3,7 +3,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "@/hooks/use-toast";
 import DastForm from "@/components/DastForm";
 import BrowserPreview from "@/components/BrowserPreview";
-import ScanProgress from "@/components/ScanProgress";
 import ReportGenerator from "@/components/ReportGenerator";
 
 const Index = () => {
@@ -14,6 +13,8 @@ const Index = () => {
   const [targetUrl, setTargetUrl] = useState("");
   const [logs, setLogs] = useState<string>(""); // State to store logs as plain text
   const [isScrapingFinished, setIsScrapingFinished] = useState(false); // State to check if scraping is finished
+  const [screenshot, setScreenshot] = useState<string | null>(null); // State to store the screenshot
+  const [isLatitudeEnable, setIsLatitudeEnable] = useState(true); // Variable to track if latitude (screenshot) is enabled
 
   const handleStartScan = async (data: {
     url: string;
@@ -24,7 +25,7 @@ const Index = () => {
     // Reset previous scan state
     setScanStatus({ scanning: true, scanComplete: false });
     setTargetUrl(data.url);
-    
+
     // Display notification
     toast({
       title: "Scan Started",
@@ -60,29 +61,40 @@ const Index = () => {
     if (scanStatus.scanning) {
       const intervalId = setInterval(async () => {
         try {
-          const response = await fetch("http://localhost:8000/logs");
-          if (response.ok) {
-            const logData = await response.text();
-            setLogs(logData);
-            // Puedes analizar aquí si ha acabado el scraping
-            if (logData.includes("Scraping finished")) {
-              setIsScrapingFinished(true);
+          if (isLatitudeEnable) {
+            // Fetch screenshot
+            const screenshotResponse = await fetch("http://localhost:8000/screenshot");
+            if (screenshotResponse.ok) {
+              const screenshotBlob = await screenshotResponse.blob();
+              const screenshotUrl = URL.createObjectURL(screenshotBlob);
+              setScreenshot(screenshotUrl);
+            } else {
+              console.error("Failed to fetch screenshot");
             }
           } else {
-            console.error("Failed to fetch logs");
+            // Fetch logs after latitude is disabled
+            const logResponse = await fetch("http://localhost:8000/logs");
+            if (logResponse.ok) {
+              const logData = await logResponse.text();
+              setLogs(logData);
+              if (logData.includes("Scraping finished")) {
+                setIsScrapingFinished(true);
+              }
+            } else {
+              console.error("Failed to fetch logs");
+            }
           }
         } catch (error) {
-          console.error("Error fetching logs:", error);
+          console.error("Error fetching screenshot or logs:", error);
         }
       }, 1000);
 
       return () => clearInterval(intervalId);
     }
-  }, [scanStatus.scanning]);
+  }, [scanStatus.scanning, isLatitudeEnable]); // Dependemos de 'isLatitudeEnable' para cambiar el flujo
 
   const handleScanComplete = () => {
     setScanStatus({ scanning: false, scanComplete: true });
-    
     toast({
       title: "Scan Complete",
       description: "DAST scan has completed successfully!",
@@ -99,23 +111,25 @@ const Index = () => {
             Find security vulnerabilities in web applications with dynamic scanning
           </p>
         </header>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left column - Form and Report */}
           <div className="space-y-6">
             <DastForm onSubmit={handleStartScan} isScanning={scanStatus.scanning} />
             <ReportGenerator isComplete={scanStatus.scanComplete} url={targetUrl} />
           </div>
-          
+
           {/* Middle column - Browser Preview */}
           <div className="lg:col-span-2">
-            <BrowserPreview active={scanStatus.scanning || scanStatus.scanComplete} url={targetUrl} logs={logs} isScrapingFinished={isScrapingFinished}/>
+            <BrowserPreview
+              active={scanStatus.scanning || scanStatus.scanComplete}
+              url={targetUrl}
+              logs={logs}
+              isScrapingFinished={isScrapingFinished}
+              isLatitudeEnable={isLatitudeEnable}
+              screenshot={screenshot}
+            />
           </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          {/* Bottom row - Progress and AI Messages */}
-          <ScanProgress isScanning={scanStatus.scanning} onComplete={handleScanComplete} />
         </div>
       </div>
     </div>
