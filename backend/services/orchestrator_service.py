@@ -14,11 +14,11 @@ async def orchestrate_scan(url: str, username: str, password: str):
         login_result = await start_latitude_login(url, username, password)
 
         # Launch the spider and AI scrapper concurrently
-        #zap_task = asyncio.create_task(run_zap_spider(url))
-        #ai_scrapper_task = asyncio.create_task(start_latitude_scraping(url))
+        zap_task = asyncio.create_task(run_zap_spider(url))
+        ai_scrapper_task = asyncio.create_task(start_latitude_scraping(url))
 
         # Wait for both tasks to complete
-        #zap_spider_result, ai_scrapper_result = await asyncio.gather(zap_task, ai_scrapper_task)
+        zap_spider_result, ai_scrapper_result = await asyncio.gather(zap_task, ai_scrapper_task)
 
         selenium_shutdown()  # Ensure the Selenium WebDriver is shut down
 
@@ -29,8 +29,8 @@ async def orchestrate_scan(url: str, username: str, password: str):
         return {
             "success": True,
             "login_result": login_result,
-            "ai_scrapper_result": 1,
-            "zap_spider_result": 1,
+            "ai_scrapper_result": ai_scrapper_result,
+            "zap_spider_result": zap_spider_result,
             "zap_results": zap_results
 
         }

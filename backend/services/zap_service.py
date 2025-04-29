@@ -1,6 +1,7 @@
 from zapv2 import ZAPv2
 from config.logs_config import setup_logger
 import asyncio
+import time
 from dotenv import load_dotenv
 import os
 
@@ -17,16 +18,28 @@ zap = ZAPv2(apikey=apiKey)
 
 async def run_zap_spider(target_url):
     logger.info("[*] Starting traditional Spider...")
+
     spider_id = zap.spider.scan(target_url)
+    timeout = time.time() + 60  # 1 minuto de timeout
     while int(zap.spider.status(spider_id)) < 100:
+        if time.time() > timeout:
+            logger.warning("[!] Traditional Spider timeout reached (1 min).")
+            break
         await asyncio.sleep(2)
-    logger.info("[*] Spider completed!")
+    logger.info("[*] Spider completed or timed out.")
 
     logger.info("[*] Starting AJAX Spider...")
     zap.ajaxSpider.scan(target_url)
-    while zap.ajaxSpider.status == 'running':
+    timeout = time.time() + 60  # 1 minuto de timeout
+    while True:
+        status = zap.ajaxSpider.status
+        if status == 'stopped':
+            logger.info("[*] AJAX Spider completed!")
+            break
+        if time.time() > timeout:
+            logger.warning("[!] AJAX Spider timeout reached (1 min).")
+            break
         await asyncio.sleep(2)
-    logger.info("[*] AJAX Spider completed!")
 
 async def run_zap_scan(target_url):
     logger.info("[*] Starting Active Scan...")

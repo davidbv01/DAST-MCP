@@ -45,7 +45,7 @@ export default function BrowserPreview({
               <img src={screenshot} alt="Screenshot" className="w-full h-auto" />
             </div>
           ) : (
-            <div className="text-xs text-muted-foreground my-1">Loading screenshot...</div>
+            <div className="text-xs text-muted-foreground my-1"></div>
           )}
 
           {/* Show logs once scraping is finished */}
@@ -58,7 +58,7 @@ export default function BrowserPreview({
               )}
             </div>
           ) : (
-            <div className="text-xs text-muted-foreground my-1">Loading logs...</div>
+            <div className="text-xs text-muted-foreground my-1"></div>
           )}
         </div>
       </CardContent>

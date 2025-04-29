@@ -62,32 +62,31 @@ const Index = () => {
       const intervalId = setInterval(async () => {
         try {
           if (isLatitudeEnable) {
-            // Fetch screenshot
+            // Fetch screenshot + check if scraping has finished
             const screenshotResponse = await fetch("http://localhost:8000/screenshot");
             if (screenshotResponse.ok) {
-              const screenshotBlob = await screenshotResponse.blob();
-              const screenshotUrl = URL.createObjectURL(screenshotBlob);
-              setScreenshot(screenshotUrl);
-            } else {
-              console.error("Failed to fetch screenshot");
-            }
-          } else {
-            // Fetch logs after latitude is disabled
-            const logResponse = await fetch("http://localhost:8000/logs");
-            if (logResponse.ok) {
-              const logData = await logResponse.text();
-              setLogs(logData);
-              if (logData.includes("Scraping finished")) {
-                setIsScrapingFinished(true);
+              // Analiza si es imagen o JSON con mensaje de fin
+              const contentType = screenshotResponse.headers.get("Content-Type");
+              if (contentType && contentType.includes("application/json")) {
+                const data = await screenshotResponse.json();
+                if (data.message?.includes("Scraping finished")) {
+                  console.log("Scraping finished. Switching to log mode.");
+                  setIsLatitudeEnable(false);
+                }
+              } else {
+                // Si es imagen, la mostramos
+                const screenshotBlob = await screenshotResponse.blob();
+                const screenshotUrl = URL.createObjectURL(screenshotBlob);
+                setScreenshot(screenshotUrl);
               }
             } else {
-              console.error("Failed to fetch logs");
+              console.error("Failed to fetch screenshot");
             }
           }
         } catch (error) {
           console.error("Error fetching screenshot or logs:", error);
         }
-      }, 1000);
+      }, 2000);
 
       return () => clearInterval(intervalId);
     }
