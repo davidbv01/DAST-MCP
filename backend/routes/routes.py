@@ -1,21 +1,23 @@
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, RedirectResponse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from models.requests import NavigateRequest, InputRequest, ClickRequest, LatitudeRequest
 from services.selenium_service import get_driver
-from services.zap_service import run_zap_full_scan
-from services.latitude_service import start_latitude
+from services.orchestrator_service import orchestrate_scan
 from utils.utils import cookies_changed, get_html
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
-import logging
 import asyncio
 import io
 
 router = APIRouter()
+
+@router.get("/mcp/sse", operation_id="redirect_sse")
+async def redirect_sse():
+    return RedirectResponse(url="/mcp")
 
 @router.post("/navigate",
              operation_id="navigate")
@@ -91,20 +93,11 @@ async def click_element(request: ClickRequest):
         raise HTTPException(status_code=500, detail=f"Unhandled server error: {str(e)}")
 
 
-@router.post("/execute_scan",
-             operation_id="execute_scan")
-async def execute_scan(request: NavigateRequest):
-    try:
-        asyncio.create_task(run_zap_full_scan(request.url))
-        return {"success": True, "message": "Scan started in background"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 @router.post("/start_latitude",
              operation_id="start_latitude")
 async def execute_scan(request: LatitudeRequest):
     try:
-        asyncio.create_task(start_latitude(request.url, request.username, request.password))
+        asyncio.create_task(orchestrate_scan(request.url, request.username, request.password))
         return {"success": True, "message": "Scan started in background"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -114,7 +107,11 @@ async def execute_scan(request: LatitudeRequest):
 async def get_screenshot():
     try:
         driver = get_driver()
-        png = driver.get_screenshot_as_png()
-        return StreamingResponse(io.BytesIO(png), media_type="image/png")
+        if driver is None:
+            #Scraping finished
+            return {"message": "Scraping finished. Now starting the ZAP scan..."}
+        else:
+            png = driver.get_screenshot_as_png()
+            return StreamingResponse(io.BytesIO(png), media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

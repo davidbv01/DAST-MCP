@@ -32,7 +32,7 @@ export default function BrowserPreview({ active, url }: BrowserPreviewProps) {
       // Configura un intervalo para actualizar la captura de pantalla periódicamente (cada 5 segundos)
       const intervalId = setInterval(() => {
         fetchScreenshot();
-      }, 2000); // 5000ms = 5 segundos
+      }, 1000); // 1 segundo
 
       // Limpia el intervalo cuando el componente se desactive
       return () => clearInterval(intervalId);
