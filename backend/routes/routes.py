@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import StreamingResponse, RedirectResponse
+from fastapi.responses import StreamingResponse, RedirectResponse, PlainTextResponse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,6 +12,12 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import asyncio
 import io
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+LOG_FILE_PATH = os.getenv("LOG_FILE_PATH")
 
 router = APIRouter()
 
@@ -115,3 +121,17 @@ async def get_screenshot():
             return StreamingResponse(io.BytesIO(png), media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/logs", response_class=PlainTextResponse)
+async def get_logs():
+    try:
+        if not os.path.exists(LOG_FILE_PATH):
+            raise HTTPException(status_code=404, detail="Log file not found")
+
+        with open(LOG_FILE_PATH, "r", encoding='utf-8') as file:
+            logs = file.read()
+
+        return logs  # Return logs as plain text
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading log file: {str(e)}")
