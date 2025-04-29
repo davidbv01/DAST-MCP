@@ -1,5 +1,8 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def get_html(soup, base_url):
     links = []
@@ -76,3 +79,28 @@ def cookies_changed(before, after):
     after_set = {cookie['name']: cookie['value'] for cookie in after}
     
     return before_set != after_set
+
+def close_all_popups(driver, timeout=2):
+    selectors = [
+        "//button[contains(@aria-label, 'Close')]",  
+        "//button[contains(text(), 'Close')]",
+        "//button[contains(text(), 'Dismiss')]",
+        "//button[contains(text(), '×')]",
+        "//div[contains(@class, 'popup')]//button",
+        "//div[contains(@class, 'modal')]//button[contains(text(), '×')]",
+        "//button[contains(@class, 'close-dialog')]",
+        "//button[.//mat-icon[text()=' visibility_off ']]"
+    ]
+
+    for xpath in selectors:
+        try:
+            elements = driver.find_elements(By.XPATH, xpath)
+            for el in elements:
+                try:
+                    WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                    el.click()
+                    print(f"Closed popup with selector: {xpath}")
+                except Exception as inner_error:
+                    print(f"Couldn't click popup button (selector: {xpath}): {inner_error}")
+        except Exception as e:
+            print(f"Error searching popups with {xpath}: {e}")

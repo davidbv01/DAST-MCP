@@ -7,7 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from models.requests import NavigateRequest, InputRequest, ClickRequest, LatitudeRequest
 from services.selenium_service import get_driver
 from services.orchestrator_service import orchestrate_scan
-from utils.utils import cookies_changed, get_html
+from utils.utils import cookies_changed, get_html, close_all_popups
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import asyncio
@@ -41,6 +41,8 @@ async def navigate(request: NavigateRequest):
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
         summary = get_html(BeautifulSoup(driver.page_source, 'html.parser'), request.url)
+        
+        close_all_popups(driver, timeout=5)
         return {"success": True, "elements": summary}
     except HTTPException as http_exc:
         raise http_exc
@@ -63,16 +65,18 @@ async def input_text(request: InputRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/click_element",
+@router.post("/click_element", 
              operation_id="click_element")
 async def click_element(request: ClickRequest):
     try:
         driver = get_driver()
+        # Determinar si el selector es CSS o XPath
+        by = By.XPATH if request.selector.strip().startswith("//") else By.CSS_SELECTOR
 
-        # Esperamos al botón (hasta 5 segundos)
+        print(f"Waiting for element with selector: {request.selector} (By: {by})")
         try:
             element = WebDriverWait(driver, 5).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, request.selector))
+                EC.element_to_be_clickable((by, request.selector))
             )
         except TimeoutException:
             raise HTTPException(status_code=404, detail=f"Element not found or not clickable: {request.selector}")
@@ -83,18 +87,18 @@ async def click_element(request: ClickRequest):
             current_url = driver.current_url
             element.click()
             try:
-                # Esperamos a que cambie la URL (indicativo de login exitoso)
                 WebDriverWait(driver, 5).until(EC.url_changes(current_url))
                 cookies_after = driver.get_cookies()
                 is_logged = cookies_changed(cookies_before, cookies_after)
             except TimeoutException:
-                # Click ocurrió pero no hubo login (ni cambio de URL)
                 raise HTTPException(status_code=401, detail="Login failed: credentials likely invalid")
         else:
             element.click()
+
         return {"success": True, "isLogged": is_logged}
+
     except HTTPException as http_exc:
-        raise http_exc  
+        raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unhandled server error: {str(e)}")
 

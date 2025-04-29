@@ -62,19 +62,24 @@ const Index = () => {
       const intervalId = setInterval(async () => {
         try {
           if (isLatitudeEnable) {
-            // Fetch screenshot + check if scraping has finished
             const screenshotResponse = await fetch("http://localhost:8000/screenshot");
             if (screenshotResponse.ok) {
-              // Analiza si es imagen o JSON con mensaje de fin
               const contentType = screenshotResponse.headers.get("Content-Type");
               if (contentType && contentType.includes("application/json")) {
                 const data = await screenshotResponse.json();
                 if (data.message?.includes("Scraping finished")) {
                   console.log("Scraping finished. Switching to log mode.");
                   setIsLatitudeEnable(false);
+  
+                  // 🔽 NUEVO: solicitar los logs al cambiar a modo logs
+                  const logsResponse = await fetch("http://localhost:8000/logs");
+                  if (logsResponse.ok) {
+                    const logsText = await logsResponse.text();
+                    setLogs(logsText);
+                    setIsScrapingFinished(true); // también puedes usar esto como trigger en BrowserPreview
+                  }
                 }
               } else {
-                // Si es imagen, la mostramos
                 const screenshotBlob = await screenshotResponse.blob();
                 const screenshotUrl = URL.createObjectURL(screenshotBlob);
                 setScreenshot(screenshotUrl);
@@ -82,15 +87,25 @@ const Index = () => {
             } else {
               console.error("Failed to fetch screenshot");
             }
+          } else {  
+            if (!isScrapingFinished) {
+              const logsResponse = await fetch("http://localhost:8000/logs");
+              if (logsResponse.ok) {
+                const logsText = await logsResponse.text();
+                setLogs(logsText);
+                setIsScrapingFinished(true);
+              }
+            }
           }
         } catch (error) {
           console.error("Error fetching screenshot or logs:", error);
         }
       }, 2000);
-
+  
       return () => clearInterval(intervalId);
     }
-  }, [scanStatus.scanning, isLatitudeEnable]); // Dependemos de 'isLatitudeEnable' para cambiar el flujo
+  }, [scanStatus.scanning, isLatitudeEnable, isScrapingFinished]);
+  
 
   const handleScanComplete = () => {
     setScanStatus({ scanning: false, scanComplete: true });

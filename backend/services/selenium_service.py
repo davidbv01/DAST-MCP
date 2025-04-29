@@ -44,4 +44,6 @@ def selenium_shutdown():
     
 def get_driver():
     global driver
+    if driver is None:
+        driver = create_driver()
     return driver
