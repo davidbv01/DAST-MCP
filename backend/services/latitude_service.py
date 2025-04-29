@@ -6,6 +6,9 @@ import os
 
 last_message_count = 0
 
+# Load environment variables
+load_dotenv()
+
 # Do not expose the API key in client-side code
 sdk = Latitude(os.getenv("LATITUDE_API_KEY"), LatitudeOptions(project_id=16054))
 

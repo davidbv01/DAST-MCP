@@ -11,7 +11,7 @@ apiKey = os.getenv("ZAP_API_KEY")
 
 # Initialize ZAP API
 zap = ZAPv2(apikey=apiKey)
-
+    
 async def run_zap_full_scan(target_url):
     logging.info("[*] Starting traditional Spider...")
     spider_id = zap.spider.scan(target_url)
