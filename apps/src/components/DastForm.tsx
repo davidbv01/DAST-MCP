@@ -12,9 +12,10 @@ interface DastFormProps {
     username: string;
     password: string;
   }) => void;
+  isScanning: boolean;
 }
 
-export default function DastForm({ onSubmit }: DastFormProps) {
+export default function DastForm({ onSubmit, isScanning  }: DastFormProps) {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -24,7 +25,6 @@ export default function DastForm({ onSubmit }: DastFormProps) {
     e.preventDefault();
     console.log('Handle Submit Start');
     onSubmit({ url, email, username, password });
-    launchScan();
   };
 
   const isValidUrl = (url: string) => {
@@ -41,32 +41,6 @@ export default function DastForm({ onSubmit }: DastFormProps) {
   };
 
   const isFormValid = url && isValidUrl(url) && email && isValidEmail(email);
-
-  const launchScan = async () => {
-    try {
-      console.log('Handle Fetch Start');
-      const response = await fetch('http://localhost:8000/start_latitude', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: url,
-          username: username,
-          password: password,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Backend Response:', data);
-    } catch (error) {
-      console.error('Error al lanzar el escaneo:', error);
-    }
-  };
 
   return (
     <Card className="w-full">
@@ -136,7 +110,7 @@ export default function DastForm({ onSubmit }: DastFormProps) {
           <Button 
             type="submit" 
             className="w-full" 
-            disabled={!isFormValid}
+            disabled={!isFormValid || isScanning}
           >
             Launch Scan
           </Button>
