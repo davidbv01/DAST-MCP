@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,29 +6,40 @@ import { toast } from "@/hooks/use-toast";
 interface ReportGeneratorProps {
   isComplete: boolean;
   url: string;
+  onReportReady: (html: string) => void;
 }
 
-export default function ReportGenerator({ isComplete, url }: ReportGeneratorProps) {
+export default function ReportGenerator({ isComplete, url, onReportReady }: ReportGeneratorProps) {
   const [isGenerating, setIsGenerating] = useState(false);
-  
-  const handleGenerateReport = () => {
+
+  const handleGenerateReport = async () => {
     if (!isComplete) return;
-    
     setIsGenerating(true);
-    
-    // Simulate PDF generation
-    setTimeout(() => {
-      setIsGenerating(false);
-      
+
+    try {
+      const response = await fetch("http://localhost:8000/report"); // Cambia el puerto si es necesario
+      if (!response.ok) throw new Error("Error fetching report");
+
+      const html = await response.text();
+      onReportReady(html); // Pasar HTML al componente padre
+
       toast({
-        title: "PDF Report Generated",
-        description: "Your security report has been prepared and is ready to download.",
+        title: "HTML Report Generated",
+        description: "Your security report is ready and passed to the parent component.",
       });
-    }, 3000);
+    } catch (error) {
+      toast({
+        title: "Failed to generate report",
+        description: "Could not fetch the report from the server.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
-  
+
   const scanDate = new Date().toLocaleDateString();
-  
+
   return (
     <Card className="w-full">
       <CardHeader className="pb-2">
@@ -56,13 +66,13 @@ export default function ReportGenerator({ isComplete, url }: ReportGeneratorProp
                 <span className="font-medium text-amber-500">Medium</span>
               </div>
             </div>
-            
-            <Button 
-              className="w-full" 
+
+            <Button
+              className="w-full"
               onClick={handleGenerateReport}
               disabled={isGenerating}
             >
-              {isGenerating ? "Generating PDF..." : "Generate PDF Report"}
+              {isGenerating ? "Fetching HTML..." : "Generate HTML Report"}
             </Button>
           </>
         ) : (
