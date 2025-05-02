@@ -15,6 +15,7 @@ const Index = () => {
   const [isScrapingFinished, setIsScrapingFinished] = useState(false); // State to check if scraping is finished
   const [screenshot, setScreenshot] = useState<string | null>(null); // State to store the screenshot
   const [isLatitudeEnable, setIsLatitudeEnable] = useState(true); // Variable to track if latitude (screenshot) is enabled
+  const [htmlReport, setHtmlReport] = useState<string | null>(null);
 
   const handleStartScan = async (data: {
     url: string;
@@ -71,12 +72,11 @@ const Index = () => {
                   console.log("Scraping finished. Switching to log mode.");
                   setIsLatitudeEnable(false);
   
-                  // 🔽 NUEVO: solicitar los logs al cambiar a modo logs
                   const logsResponse = await fetch("http://localhost:8000/logs");
                   if (logsResponse.ok) {
                     const logsText = await logsResponse.text();
                     setLogs(logsText);
-                    setIsScrapingFinished(true); // también puedes usar esto como trigger en BrowserPreview
+                    setIsScrapingFinished(true); 
                   }
                 }
               } else {
@@ -130,7 +130,7 @@ const Index = () => {
           {/* Left column - Form and Report */}
           <div className="space-y-6">
             <DastForm onSubmit={handleStartScan} isScanning={scanStatus.scanning} />
-            <ReportGenerator isComplete={scanStatus.scanComplete} url={targetUrl} />
+            <ReportGenerator isComplete={scanStatus.scanComplete} url={targetUrl}  onReportReady={(html: string) => setHtmlReport(html)} />
           </div>
 
           {/* Middle column - Browser Preview */}
@@ -142,6 +142,7 @@ const Index = () => {
               isScrapingFinished={isScrapingFinished}
               isLatitudeEnable={isLatitudeEnable}
               screenshot={screenshot}
+              htmlReport={htmlReport}
             />
           </div>
         </div>
