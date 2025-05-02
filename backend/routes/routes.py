@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import StreamingResponse, RedirectResponse, PlainTextResponse
+from fastapi.responses import StreamingResponse, RedirectResponse, PlainTextResponse, HTMLResponse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from models.requests import NavigateRequest, InputRequest, ClickRequest, LatitudeRequest
 from services.selenium_service import get_driver
 from services.orchestrator_service import orchestrate_scan
+from services.zap_service import create_zap_report
 from utils.utils import cookies_changed, get_html, close_all_popups
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
@@ -138,6 +139,16 @@ async def get_logs():
             print("File content:", repr(logs))
 
         return logs  # Return logs as plain text
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading log file: {str(e)}")
+
+
+@router.get("/report", response_class=HTMLResponse)
+async def get_report():
+    try:
+        html_response = create_zap_report()
+        return html_response  # Return the xml
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading log file: {str(e)}")

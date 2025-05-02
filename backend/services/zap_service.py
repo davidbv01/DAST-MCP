@@ -50,8 +50,10 @@ async def run_zap_scan(target_url):
 
     logger.info("[*] Full scan completed successfully!")
 
+    
+
+async def create_zap_report(target_url):
     logger.info("[*] Creating report")
-    report_xml = zap.core.xmlreport()
-    with open('zap_report.xml', 'w') as f:
-        f.write(report_xml)
+    report_html = zap.core.htmlreport()
     logger.info("[*] Report saved!")
+    return report_html
