@@ -8,8 +8,6 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-app = FastAPI()
-
 # Startup and shutdown logic for the WebDriver
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):  # Aceptar el argumento 'app'
@@ -21,7 +19,14 @@ async def app_lifespan(app: FastAPI):  # Aceptar el argumento 'app'
         # Shutdown
         selenium_shutdown()
 
-app = FastAPI(lifespan=app_lifespan)
+app = FastAPI(
+    title="DAST Security Scanner API",
+    description="Dynamic Application Security Testing (DAST) API with AI-powered web automation",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    lifespan=app_lifespan
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,8 +39,25 @@ app.add_middleware(
 # Include routes from routes.py
 app.include_router(router)
 
-# Setup FastApiMCP
-mcp = FastApiMCP(app, description="MCP Server for web scraping for cibersecurity")
+# Setup FastApiMCP with enhanced configuration
+mcp = FastApiMCP(
+    app, 
+    name="DAST Security Scanner",
+    description="""
+    MCP Server for Dynamic Application Security Testing (DAST) with AI-powered automation.
+    
+    This server provides tools for:
+    • Web application navigation and analysis
+    • Automated form interaction and input
+    • AI-powered authentication and login
+    • Comprehensive security vulnerability scanning
+    • Real-time scan monitoring with screenshots
+    • Detailed security reporting
+    
+    Built with OWASP ZAP, Selenium WebDriver, and Latitude AI services.
+    Perfect for security testing, penetration testing, and automated vulnerability assessment.
+    """
+)
 mcp.mount()
 
 if __name__ == "__main__":
