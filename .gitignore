@@ -24,3 +24,12 @@ Thumbs.db
 .vscode/
 .idea/
 *.iml
+
+venv/
+
+# Ignore backend/venv/
+backend/venv/
+
+# Ignore backend/venv/
+backend/venv/
+
