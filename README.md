@@ -52,5 +52,3 @@
 Esto pondrá en marcha el servidor en `http://localhost:8000`.
 
 ---
-
-¿Tienes dudas o necesitas ayuda adicional? ¡No dudes en preguntar!
